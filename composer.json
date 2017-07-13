@@ -1,0 +1,6 @@
+{
+    "require": {
+        "ckrack/slim3-boilerplate": "^1.0",
+        "willdurand/geocoder": "^3.3"
+    }
+}
