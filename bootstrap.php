@@ -1,10 +1,15 @@
 <?php
-    $container = new \Slim\Container;
+    $dotenv = new \Dotenv\Dotenv(__DIR__);
+    $dotenv->load();
 
     /*
      * DEPENDENCY INJECTORS
      *
      */
+    $app = new \Slim\App();
+
+    //$container = new \Slim\Container;
+    $container = $app->getContainer();
 
     //-- MONO LOG
     $container['logger'] = function ($c) {
@@ -22,5 +27,19 @@
         return $templates;
     };
 
-    $app = new \Slim\App($container);
+    $container['geocoder'] = function ($c) {
+
+        $geocoder = new \Geocoder\ProviderAggregator();
+        $adapter  = new \Ivory\HttpAdapter\Guzzle6HttpAdapter();
+
+        $geocoder->registerProviders([
+
+            new \Geocoder\Provider\GoogleMaps($adapter)
+
+        ]);
+
+        return $geocoder;
+
+    };
+
 ?>

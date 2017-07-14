@@ -1,6 +1,7 @@
 {
     "require": {
         "ckrack/slim3-boilerplate": "^1.0",
-        "willdurand/geocoder": "^3.3"
+        "willdurand/geocoder": "^3.3",
+        "vlucas/phpdotenv": "^2.4"
     }
 }
