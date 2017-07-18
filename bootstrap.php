@@ -34,7 +34,11 @@
 
         $geocoder->registerProviders([
 
-            new \Geocoder\Provider\GoogleMaps($adapter)
+            new \Geocoder\Provider\GoogleMaps($adapter),
+            new \Geocoder\Provider\OpenStreetMap($adapter),
+            new \Geocoder\Provider\MapQuest($adapter, getenv('MAPQUEST_API_KEY')),
+            new \Geocoder\Provider\OpenCage($adapter, getenv('OPENCAGE_API_KEY')),
+            new \Geocoder\Provider\BingMaps($adapter, getenv('BINGMAPS_API_KEY'))
 
         ]);
 

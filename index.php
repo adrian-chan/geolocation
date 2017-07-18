@@ -69,25 +69,129 @@ $app->get('/providers', function (Request $request, Response $response) {
     var_dump($g->first()->getSubLocality());
 });
 
-
+/*
+ * GOOGLE MAPS GEOCODER
+ *
+ */
 $app->get('/google-maps', function (Request $request, Response $response) {
 
     // init params;
     $params = $request->getQueryParams();
-    $lon = $params['lon'];
-    $lat = $params['lat'];
+    //$lon = $params['lon'];
+    //$lat = $params['lat'];
 
-    $result = $this->geocoder->reverse($lat, $lon);
+    $lat = -32.038492;
+    $lon = 115.834519;
 
-    //var_dump($result->all());
-    $g = $result->getIterator();
+    $result = $this->geocoder->using('google_maps')->reverse($lat, $lon);
+    $resultJson = geoJsonObjects::mapJson($result);
 
-    var_dump($g);
-    /*$response
-        ->withHeader('content-type', 'application/json')
-        ->write(json_encode($result->all()), JSON_PRETTY_PRINT);*/
+    return $response
+        ->withHeader('Content-Type', 'application/json')
+        ->write($resultJson, JSON_PRETTY_PRINT);
 });
+
+/*
+ * OPEN STREET MAP GEOCODER
+ *
+ *
+ */
+$app->get('/open-street-map', function (Request $request, Response $response) {
+
+    // init params;
+    $params = $request->getQueryParams();
+    //$lon = $params['lon'];
+    //$lat = $params['lat'];
+
+    $lat = -32.038492;
+    $lon = 115.834519;
+
+    $result = $this->geocoder->using('openstreetmap')->reverse($lat, $lon);
+    $resultJson = geoJsonObjects::mapJson($result);
+
+    return $response
+        ->withHeader('Content-Type', 'application/json')
+        ->write($resultJson, JSON_PRETTY_PRINT);
+});
+
+$app->get('/map-quest', function (Request $request, Response $response) {
+
+    // init params;
+    $params = $request->getQueryParams();
+    //$lon = $params['lon'];
+    //$lat = $params['lat'];
+
+    $lat = -32.038492;
+    $lon = 115.834519;
+
+    $result = $this->geocoder->using('map_quest')->reverse($lat, $lon);
+    $resultJson = geoJsonObjects::mapJson($result);
+
+    return $response
+        ->withHeader('Content-Type', 'application/json')
+        ->write($resultJson, JSON_PRETTY_PRINT);
+});
+
+$app->get('/open-cage', function (Request $request, Response $response) {
+
+    // init params;
+    $params = $request->getQueryParams();
+    //$lon = $params['lon'];
+    //$lat = $params['lat'];
+
+    $lat = -32.038492;
+    $lon = 115.834519;
+
+    $result = $this->geocoder->using('opencage')->reverse($lat, $lon);
+    $resultJson = geoJsonObjects::mapJson($result);
+
+    return $response
+        ->withHeader('Content-Type', 'application/json')
+        ->write($resultJson, JSON_PRETTY_PRINT);
+});
+
+$app->get('/bing-maps', function (Request $request, Response $response) {
+
+    // init params;
+    $params = $request->getQueryParams();
+    //$lon = $params['lon'];
+    //$lat = $params['lat'];
+
+    $lat = -32.038492;
+    $lon = 115.834519;
+
+    $result = $this->geocoder->using('bing_maps')->reverse($lat, $lon);
+    $resultJson = geoJsonObjects::mapJson($result);
+
+    return $response
+        ->withHeader('Content-Type', 'application/json')
+        ->write($resultJson, JSON_PRETTY_PRINT);
+});
+
 
 $app->run();
 
+class geoJsonObjects {
+
+    static public function mapJson (\Geocoder\Model\AddressCollection $result)
+    {
+        $result = $result->all();
+        $results = [];
+        $i = 0;
+        while ($i < count($result)) {
+            $results[$i]['coordinates'] = $result[$i]->getcoordinates();
+            $results[$i]['locality'] = $result[$i]->getLocality();
+            $results[$i]['sublocality'] = $result[$i]->getSubLocality();
+            $results[$i]['streetname']  = $result[$i]->getStreetName();
+            $results[$i]['streetno']  = $result[$i]->getStreetNumber();
+            $results[$i]['postcode']  = $result[$i]->getPostalCode();
+            $results[$i]['timezone']  = $result[$i]->getTimezone();
+            $i++;
+        }
+
+        return json_encode($results, JSON_PRETTY_PRINT);
+    }
+}
+
+//function returnArrayMap( $results );
 ?>
