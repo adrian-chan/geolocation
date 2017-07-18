@@ -1,3 +1,11 @@
-<script>
-
-</script>
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Webpack & Angular</title>
+</head>
+<body>
+<p>Angular is working: {{1 + 1 === 2}}</p>
+<script src="app/bundle.js"></script>
+</body>
+</html>
